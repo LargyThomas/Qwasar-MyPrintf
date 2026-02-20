@@ -1,0 +1,36 @@
+Nom : int my_printf(char * restrict format, ...); --> Le ... veut dire que que ça accepte un nombre variable d'arguments. (appelé variadic function apparement)
+
+Utiliser  stdarg :
+#include <stdarg.h>
+
+va_list args;               Liste d'arguments
+va_start(args, format);     Initialiser la liste 
+va_copie;                   Permet la copie des args            
+va_arg(args, type);         Permet de récupérer caractère par caractère
+va_end(args);               Met fin
+
+Qu'est ce que je dois faire ?
+
+On va recevoir une chaine de caractères, exemple : my_printf("Salut, moi c'est %s, j'ai %d ans.\n", "Thomas", 18)
+
+Pour les caractères normaux, on les affiche comme d'hab; si on tombe sur un % suivi d'une de ces lettres (en dessous) ce sont des caractères spéciaux.
+ 
+Format  Attendu             Affichage                           A savoir : entier signé = compris entre -2147483648 et 2147483647, entier non signé = 0 à 4294967295
+%d :   int ->              entier signé en base 10                                          C'EST OK
+%o :   unsigned type ->    entier non signé en octal base 8                                 C'EST OK
+%u :   unsigned type ->    entier non signé en base 10                                      C'EST OK
+%x :   unsigned type ->    entier non sgné en hexadécimal                                   C'EST OK
+%c :   int ->              un caractère                                                     C'EST OK
+%s :   char* ->            une chaine de caractères jusqu'à \0 mais ne l'inclus pas         C'EST OK
+%p :   void* ->            hexadécimal
+
+Algo simple : 
+    - Parcourir la ce qu'on te donne caractère par caractère.
+    - Si caractère normal on write() pour afficher.
+    - Si '%' on regarde le format et on le traite en fonction.
+
+IMPORTANT : Créer des fonctions à part qui vont me permettre de gérer les formats spécifiques.
+
+INFO : On peut utiliser free(), qui est utilisé pour désallouer ou libérer la mémoire qui a été précédemment allouée par l'allocation de mémoire dynamique ici malloc.
+
+REQUIEREMENT : -Wall -Wextra -Werror
