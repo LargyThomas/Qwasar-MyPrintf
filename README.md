@@ -2,18 +2,19 @@
 ***
 
 ## Task
-Le project était de créer une version minimaliste de la fonction printf() en C.
+The project was to create a minimalist version of the printf() function in C.
 
 ## Description
-J'ai créer différentes petites fonctions afin de pouvoir gérer chaque cas demander. Et une fonction my_printf pour gérer tous ça.
+I created several small functions to handle each requested case. And a my_printf function to manage all of this.
 
 ## Installation
-J'ai utilisé un fichier C où toutes me fonctions sont regroupé ainsi que un fichier Makefile pour compiler.
+I used a C file where all my functions are grouped together, as well as a Makefile file for compiling.
 
 ## Usage
-J'ai réaliser plusieurs petites fonctions afin que chacune gère un cas spécifiques. Une fonction dispatcher() qui me permet d'envoyer vers une de ces fonctions en déterminant quel lettre est derrière le %; si ce n'est pas une lettre 
-spécifique à un format, on l'affiche normalement. Et enfin j'ai créer ma fonction my_printf() qui est la fonction principale qui va parcours la chaîne de caractères que l'on nous donnera, va l'afficher caractère par caractère
-et va appeler la fonction dispatcher() si elle trouve un %. 
+I created several small functions so that each one handles a specific case. A dispatcher() function allows me to send to one of these functions by determining which letter is behind the %; if it is not a letter 
+specific to a format, it is displayed normally. And finally, I created my function my_printf(), which is the main function that will go through the character string we are given, display it character by character,
+and call the dispatcher() function if it finds a %. 
+
 
 ### The Core Team
 
