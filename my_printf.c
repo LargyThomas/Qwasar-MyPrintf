@@ -4,7 +4,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-
+// Prints a string character by character. Handles NULL by printing "(null)".
 int print_string(char *s) {
     if (!s) {
         write(1, "(null)", 6);
@@ -19,7 +19,7 @@ int print_string(char *s) {
     return count;
 }
 
-
+// Prints a single character.
 int print_char(int c) {
     char charact = (char)c;
     write(1, &charact, 1);
@@ -27,7 +27,7 @@ int print_char(int c) {
 }
 
 /*
-    Calcul --> Octal
+    Calculation --> Octal
 
     210 % 10 +'0' = 0
     210 /10 = 21
@@ -39,8 +39,9 @@ int print_char(int c) {
     2 / 10 = 0
 
     end
-*/  
+*/
 
+// Converts an unsigned integer to octal and prints it.
 int print_octal(unsigned int valeur) {
     if (valeur == 0) {
         char c = '0';
@@ -51,9 +52,9 @@ int print_octal(unsigned int valeur) {
     int octal = 0, j = 1;
 
     while (valeur != 0) {
-        octal += (valeur % 8) * j;          
+        octal += (valeur % 8) * j;
         valeur /= 8;
-        j *= 10;                              
+        j *= 10;
     }
 
     char buffer[32];
@@ -67,7 +68,7 @@ int print_octal(unsigned int valeur) {
     }
 
     int count = i;
-    // Write good sens
+    // Write in correct order
     while (i > 0) {
         i--;
         write(1, &buffer[i], 1);
@@ -75,8 +76,9 @@ int print_octal(unsigned int valeur) {
     return count;
 }
 
+// Prints a signed decimal integer. Handles negative values and zero.
 int print_signe_decimal(int valeur) {
-    char buffer[12];    // 11 character (10 and the - sign) + '\0'
+    char buffer[12];    // 11 characters (10 digits and the - sign) + '\0'
     int nombre = valeur;
 
     if (valeur == 0) {
@@ -87,7 +89,7 @@ int print_signe_decimal(int valeur) {
 
     if (valeur < 0) {
         write(1, "-", 1);
-        nombre = -nombre;        // supp the -
+        nombre = -nombre;        // Remove the minus sign
     }
 
     int i = 0;
@@ -100,7 +102,7 @@ int print_signe_decimal(int valeur) {
     }
 
     int count = i;
-    // Write good sens 
+    // Write in correct order
     while (i > 0) {
         i--;
         write(1, &buffer[i], 1);
@@ -108,6 +110,7 @@ int print_signe_decimal(int valeur) {
     return count;
 }
 
+// Prints an unsigned decimal integer.
 int print_unsigned_decimal(unsigned int valeur) {
     char buffer[11];
     int nombre = valeur;
@@ -116,7 +119,7 @@ int print_unsigned_decimal(unsigned int valeur) {
         char c = '0';
         write(1, &c, 1);
         return 0;
-    } 
+    }
 
     int i = 0;
     // Int --> String
@@ -127,7 +130,7 @@ int print_unsigned_decimal(unsigned int valeur) {
     }
 
     int count = i;
-    // Write good sens
+    // Write in correct order
     while (i > 0) {
         i--;
         write(1, &buffer[i], 1);
@@ -135,6 +138,7 @@ int print_unsigned_decimal(unsigned int valeur) {
     return count;
 }
 
+// Converts an unsigned integer to hexadecimal (uppercase) and prints it.
 int print_hexa(unsigned int decimal) {
     char hexadecimal[100];
     int i = 0;
@@ -156,21 +160,21 @@ int print_hexa(unsigned int decimal) {
     int count = i;
     while (i > 0) {
         i--;
-        write(1, &hexadecimal[i],1);
+        write(1, &hexadecimal[i], 1);
     }
     return count;
 }
 
-
+// Prints a pointer address in hexadecimal format (prefixed with 0x).
 int print_pointeur_hexa(void* pointeur) {
     unsigned long adresse = (unsigned long)pointeur;
 
     if (pointeur == NULL) return 1;
 
-    char *buffer = malloc(2 + 16 + 1);  // the 0x + characters hexa + the '\0'
+    char *buffer = malloc(2 + 16 + 1);  // 0x prefix + hex characters + '\0'
     if (!buffer) return 1;
 
-    buffer[0] = '0';          // The pointer start by the 0x
+    buffer[0] = '0';          // Pointer starts with 0x
     buffer[1] = 'x';
 
     char *base_hexa = "0123456789abcdef";
@@ -181,7 +185,7 @@ int print_pointeur_hexa(void* pointeur) {
         temp[i++] = base_hexa[adresse % 16];
         adresse /= 16;
     }
-    
+
     int position = 2;
     int count = position + i;
     while (i--) {
@@ -196,8 +200,7 @@ int print_pointeur_hexa(void* pointeur) {
     return count;
 }
 
-// This function will allow me to manage every letter and correspond it to one action --> function
-
+// Dispatches each format specifier to its corresponding print function.
 int dispatcher(char c, va_list args) {
     char pourcent = '%';
     int count = 0;
@@ -205,7 +208,7 @@ int dispatcher(char c, va_list args) {
         case 'd':
             count += print_signe_decimal(va_arg(args, int));
             break;
-            
+
         case 'o':
             count += print_octal(va_arg(args, unsigned int));
             break;
@@ -229,7 +232,7 @@ int dispatcher(char c, va_list args) {
         case 'p':
             count += print_pointeur_hexa(va_arg(args, void *));
             break;
-        
+
         default:
             count += write(1, &pourcent, 1);
             count += write(1, &c, 1);
@@ -238,6 +241,8 @@ int dispatcher(char c, va_list args) {
     return count;
 }
 
+// Recreation of printf: parses the format string and calls the dispatcher
+// for each format specifier found.
 int my_printf(char * restrict format, ...) {
     va_list args;
     va_start(args, format);
